@@ -217,6 +217,8 @@ class TrackFeature():
     def get_css(self, track_height=None, css_units=None, colwidth=None, base_fontsize=None):
         indent = '    '
         css_class = indent + '#featId{:d}.SH_{} {{\n'.format(self.id_, self.annot_class)
+        css_class += indent + indent + 'width: 100%;\n'
+        css_class += indent + indent + 'height: 100%;\n'
         for att, val in self.get_css_attr().items():
             css_class += indent + indent + '{}: {};\n'.format(att, val)
         css_class += indent + '}\n'
@@ -538,6 +540,10 @@ class TrackGroup():
                 feat = FeatureArrow(feature_bio=feature_bio, start=start, end=end, strand=strand,
                                     xmin=self.xmin, xmax=self.xmax, name=name,
                                     annot_class='CDS', zorder=zorder)
+            elif feature_bio.type in ['ncRNA', 'sRNA', 'tRNA', 'siRNA']:
+                feat = FeatureArrow(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                    xmin=self.xmin, xmax=self.xmax, name=name,
+                                    annot_class='RNA', zorder=zorder)
             elif feature_bio.type in ['start_codon']:
                 feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
                                       xmin=self.xmin, xmax=self.xmax, name=name,
@@ -1111,7 +1117,7 @@ class HTMLWriter():
         text-align: center;
         margin-left: -100%;
         margin-right: -100%;
-    }}""".format(0.6*self.css_base_fontsize*self.css_track_height, self.css_units)
+    }}\n""".format(0.6*self.css_base_fontsize*self.css_track_height, self.css_units)
 
 
         elif self.mode == 'inline-block':

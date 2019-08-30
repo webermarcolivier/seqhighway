@@ -11,9 +11,11 @@ background_score_cmap: seaborn color palette name, or a list of rgb colors.
 config_default = {
     'CDS':{
         'backgroundcolor':palette[0] + (alpha,),
-        'css_attributes':{'height':'100%',  # this is needed in order to color the empty elements in the row
-                         'width':'100%'
-                         }
+        'css_attributes':{}
+    },
+    'RNA':{
+        'backgroundcolor':palette[2] + (alpha,),
+        'css_attributes':{}
     },
     'coordinates':{
         'css_attributes':{'height':'100%',  # this is needed in order to color the empty elements in the row
