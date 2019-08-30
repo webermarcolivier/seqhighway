@@ -1,0 +1,1626 @@
+<meta charset="utf-8"/>
+<html>
+
+<style>
+    .SH_container {
+        font-size: 1rem;
+        overflow-x: auto;
+    }
+    .SH_table {
+        table-layout: fixed;
+        border-width: 0;
+        border-collapse: collapse;
+        border-spacing: 0;
+        height: 0;    <!-- This is needed in order to set the height of 100% for rows -->
+    }
+    .rendered_html tbody tr.SH_tr {
+        background: transparent;    <!-- set back the background to transparent,
+                                         not to interfere with annotation colors -->
+    }
+    td.SH_td {
+        padding:0;
+        height: 100%;
+    }
+    td.SH_header_col {
+        min-width: 5.36rem;
+        text-align: right;
+        padding-right: 1.34rem;
+        }
+    .SH_track_default {
+        font-family:monospace;
+        font-size: 1rem;
+    }
+    tr.SH_spacing_row {
+        height: 2rem;
+    }
+    .SH_track_default > td.SH_td {
+        height: 1.25rem;
+        padding-bottom: 0.25rem;
+    }
+    .SH_track0 > td.SH_td {
+        height: 1.5rem;
+        padding-bottom: 0.25rem;
+        padding-top: 0.25rem;
+    }
+    .SH_track_minus_strand > td.SH_td {
+        height: 1rem;
+        padding-bottom: 0;
+    }
+    .SH_track_coordinates > td.SH_td {
+        height: 0.8rem;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .SH_track_minus_strand > td.SH_td {
+    }
+    .SH_element {
+        white-space: nowrap;
+        padding: 0px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        width: 0.67rem;
+        height:100%;
+        text-align: center;
+    }
+    .SH_label {
+        font-size: 0.8rem;
+    }
+    .SH_ticklabel {
+        font-size: 0.6rem;
+        z-index: 10;
+        overflow-x: visible;
+        text-align: center;
+        margin-left: -100%;
+        margin-right: -100%;
+    }
+    #featId102.SH_region_score {
+        background-color: #e6f0faff;
+    }
+    #featId103.SH_region_score {
+        background-color: #d7e6f5ff;
+    }
+    #featId104.SH_region_score {
+        background-color: #c8ddf0ff;
+    }
+    #featId114.SH_translation {
+    }
+    #featId113.SH_translation {
+    }
+    #featId115.SH_translation {
+    }
+    #featId105.SH_region_score {
+        background-color: #b2d3e8ff;
+    }
+    #featId106.SH_region_score {
+        background-color: #98c7e0ff;
+    }
+    #featId107.SH_region_score {
+        background-color: #7ab6d9ff;
+    }
+    #featId108.SH_region_score {
+        background-color: #5fa6d1ff;
+    }
+    #featId97.SH_CDS {
+        background-color: #4c72b0cc;
+        height: 100%;
+        width: 100%;
+    }
+    #featId97.SH_triangle-left {
+        width: 0; 
+        height: 0; 
+        border-top: 0.5rem solid transparent;
+        border-bottom: 0.5rem solid transparent;   
+        border-right: 0.7370000000000001rem solid #4c72b0cc;
+        background: none;
+    }
+    #featId97.SH_triangle-right {
+        width: 0; 
+        height: 0; 
+        border-top: 0.5rem solid transparent;
+        border-bottom: 0.5rem solid transparent;   
+        border-left: 0.7370000000000001rem solid #4c72b0cc;
+        background: none;
+    }
+    #featId97.SH_label {
+        position: relative;
+        z-index: 10;
+        overflow-x: visible;
+        float: left;
+    }
+    #featId96.SH_start_codon {
+        color: #008000ff;
+        font-weight: bold;
+    }
+    #featId109.SH_region_score {
+        background-color: #4795c8ff;
+    }
+    #featId98.SH_stop_codon {
+        color: #ff0000ff;
+        font-weight: bold;
+    }
+    #featId110.SH_region_score {
+        background-color: #3181bdff;
+    }
+    #featId99.SH_CDS {
+        background-color: #4c72b0cc;
+        height: 100%;
+        width: 100%;
+    }
+    #featId99.SH_triangle-left {
+        width: 0; 
+        height: 0; 
+        border-top: 0.5rem solid transparent;
+        border-bottom: 0.5rem solid transparent;   
+        border-right: 0.7370000000000001rem solid #4c72b0cc;
+        background: none;
+    }
+    #featId99.SH_triangle-right {
+        width: 0; 
+        height: 0; 
+        border-top: 0.5rem solid transparent;
+        border-bottom: 0.5rem solid transparent;   
+        border-left: 0.7370000000000001rem solid #4c72b0cc;
+        background: none;
+    }
+    #featId99.SH_label {
+        position: relative;
+        z-index: 10;
+        overflow-x: visible;
+        float: right;
+    }
+    #featId111.SH_region_score {
+        background-color: #1e6eb2ff;
+    }
+    #featId112.SH_region2 {
+        background-color: #c44e5280;
+    }
+    #featId100.SH_CDS {
+        background-color: #4c72b0cc;
+        height: 100%;
+        width: 100%;
+    }
+    #featId100.SH_triangle-left {
+        width: 0; 
+        height: 0; 
+        border-top: 0.5rem solid transparent;
+        border-bottom: 0.5rem solid transparent;   
+        border-right: 0.7370000000000001rem solid #4c72b0cc;
+        background: none;
+    }
+    #featId100.SH_triangle-right {
+        width: 0; 
+        height: 0; 
+        border-top: 0.5rem solid transparent;
+        border-bottom: 0.5rem solid transparent;   
+        border-left: 0.7370000000000001rem solid #4c72b0cc;
+        background: none;
+    }
+    #featId100.SH_label {
+        position: relative;
+        z-index: 10;
+        overflow-x: visible;
+        float: left;
+    }
+    #featId101.SH_region_score {
+        background-color: #f4f9feff;
+    }
+
+</style>
+<div class="SH_container">
+    <table class="SH_table">
+        <tr class="SH_tr SH_trackgroup0 SH_track6 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"><div id="featId97" class="SH_label">gene0001</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId97" class="SH_CDS SH_triangle-right"></div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track5 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId115" class="SH_translation">></div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track4 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS SH_triangle-left"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"><div id="featId99" class="SH_label">gene0345</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId99" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track3 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation"><</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId114" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track2 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"><div id="featId100" class="SH_label">gene0002</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track1 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track0 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element">example1</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId96" class="SH_start_codon">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId96" class="SH_start_codon">T</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId96" class="SH_start_codon">G</div></div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId101" class="SH_region_score">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId102" class="SH_region_score">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId103" class="SH_region_score">G</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId104" class="SH_region_score">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId105" class="SH_region_score">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId106" class="SH_region_score">G</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2"><div id="featId107" class="SH_region_score">G</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2"><div id="featId108" class="SH_region_score">G</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2"><div id="featId109" class="SH_region_score">A</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2"><div id="featId110" class="SH_region_score">C</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2"><div id="featId111" class="SH_region_score">T</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2">G</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2">C</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId112" class="SH_region2">A</div></div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId98" class="SH_stop_codon">T</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId98" class="SH_stop_codon">A</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId98" class="SH_stop_codon">A</div></div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track-1 SH_track_default SH_track_minus_strand">
+            <td class="SH_td SH_header_col"><div class="SH_element">strand -</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup1 SH_track1 SH_track_default SH_track_coordinates">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId117" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId119" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId121" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId123" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId125" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId127" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId129" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup1 SH_track0 SH_track_default SH_track_coordinates">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId116" class="SH_ticklabel">10</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId118" class="SH_ticklabel">20</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId120" class="SH_ticklabel">30</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId122" class="SH_ticklabel">40</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId124" class="SH_ticklabel">50</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId126" class="SH_ticklabel">60</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId128" class="SH_ticklabel">70</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_spacing_row"></tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track6 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track5 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track4 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track3 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track2 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS"><div id="featId100" class="SH_label">⋯</div></div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId100" class="SH_CDS SH_triangle-right"></div></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track1 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">-</div></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId113" class="SH_translation">></div></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track0 SH_track_default">
+            <td class="SH_td SH_header_col"><div class="SH_element">example1</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup0 SH_track-1 SH_track_default SH_track_minus_strand">
+            <td class="SH_td SH_header_col"><div class="SH_element">strand -</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">C</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+            <td class="SH_td"><div class="SH_element">G</div></td>
+            <td class="SH_td"><div class="SH_element">T</div></td>
+            <td class="SH_td"><div class="SH_element">A</div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup1 SH_track1 SH_track_default SH_track_coordinates">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId131" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId133" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId135" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId137" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId139" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId141" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId143" class="SH_ticklabel">|</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_tr SH_trackgroup1 SH_track0 SH_track_default SH_track_coordinates">
+            <td class="SH_td SH_header_col"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId130" class="SH_ticklabel">80</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId132" class="SH_ticklabel">90</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId134" class="SH_ticklabel">100</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId136" class="SH_ticklabel">110</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId138" class="SH_ticklabel">120</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId140" class="SH_ticklabel">130</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"><div id="featId142" class="SH_ticklabel">140</div></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+            <td class="SH_td"><div class="SH_element"></div></td>
+        </tr>
+        <tr class="SH_spacing_row"></tr>
+    </table>
+</div>
+
+</html>
