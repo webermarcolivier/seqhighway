@@ -128,6 +128,8 @@ class TrackFeature():
     def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
         self.start = start
         self.end = end
+        self.start_uncropped = start
+        self.end_uncropped = end
         self.strand = strand
         self.xmin = xmin
         self.xmax = xmax
@@ -141,23 +143,15 @@ class TrackFeature():
         if self.start is not None and self.end is not None:
             if self.xmin > self.start:
                 self.cropped_left = True
+                self.start = self.xmin
             if self.xmax < self.end:
                 self.cropped_right = True
+                self.end = self.xmax
             if self.xmin > self.end - 1 or self.xmax - 1 < self.start:
                 self.visible = False
             
             if self.visible:
-                # Crop BioPython feature
-                ###################################################
-                # No, better keep the original Biopython feature location, such that we can correctly
-                # extract the translated sequence, for example.
-                self.feature.location = \
-                    FeatureLocation(start=max(self.feature.location.start, self.xmin),
-                                    end=min(self.feature.location.end, self.xmax),
-                                    strand=self.feature.location.strand)
-                self.length = len(self.feature)
-                self.start = int(self.feature.location.start)
-                self.end = int(self.feature.location.end)
+                self.length = self.end - self.start
         
         self.annot_class = annot_class
         self.name = name
@@ -177,30 +171,7 @@ class TrackFeature():
         return self.end - self.xmin
 
     def __len__(self):
-        return len(self.feature)
-    
-    def __getitem__(self, index):
-        # Crop the feature in global coordinates
-        if type(index) is slice:
-            if index.step not in [1, None]:
-                raise ValueError('TrackFeature.__getitem__ index('+str(index)+') slice step can only be 1.')
-            trackfeat_sliced = copy(self)
-            trackfeat_sliced.feature = copy(self.feature)
-            trackfeat_sliced.feature.location = \
-                FeatureLocation(start=max(self.feature.location.start, index.start),
-                                end=min(self.feature.location.end, index.stop))
-            trackfeat_sliced.length = len(trackfeat_sliced.feature)
-            trackfeat_sliced.start = int(trackfeat_sliced.feature.location.start)
-            trackfeat_sliced.end = int(trackfeat_sliced.feature.location.end)
-            trackfeat_sliced.jstart = trackfeat_sliced.start - trackfeat_sliced.xmin
-            trackfeat_sliced.jend = trackfeat_sliced.end - trackfeat_sliced.xmin
-            if trackfeat_sliced.start > self.start:
-                trackfeat_sliced.cropped_left = True
-            if trackfeat_sliced.end < self.end:
-                trackfeat_sliced.cropped_right = True
-            return trackfeat_sliced
-        else:
-            raise TypeError('TrackFeature.__getitem__ index('+str(index)+') must be a slice.')
+        return len(self.end - self.start)
         
     # from dnafeaturesviewer
     def overlaps_with(self, other):
@@ -231,7 +202,7 @@ class TrackFeature():
         vmin = self.format_attr.get('background_score_vmin')
         vmax = self.format_attr.get('background_score_vmax')
         if bg_score_name is not None and bg_score_cmap is not None:
-            score = self.feature.qualifiers.get(bg_score_name)
+            score = self.feature_bio.qualifiers.get(bg_score_name)
             if score is None:
                 score = 1
             norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
@@ -254,7 +225,11 @@ class TrackFeature():
     def get_css_tag(self, j=None):
         tag_open = '<div id="featId{:d}" class="SH_{}">'.format(self.id_, self.annot_class)
         tag_close = '</div>'
-        return tag_open, tag_close
+        class_list = ['SH_{}'.format(self.annot_class)]
+        return tag_open, tag_close, class_list, self.id_
+
+    def get_css_class_and_id(self, j=None):
+        return 'id="featId{:d}" class="SH_{}"'.format(self.id_, self.annot_class)
     
     def get_text(self, text='', j=None):
         return text
@@ -262,8 +237,9 @@ class TrackFeature():
 
 class FeatureOverlay(TrackFeature):
     
-    def __init__(self, feature, xmin=None, xmax=None, name=None, level=0, zorder=0, annot_class=None):
-        super().__init__(feature=feature, xmin=xmin, xmax=xmax, name=name, level=level, zorder=zorder, annot_class=annot_class)
+    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
+                         name=name, level=level, zorder=zorder, annot_class=annot_class)
         self.modifies_text = False
             
     def get_text(self, text, j=None):
@@ -272,15 +248,17 @@ class FeatureOverlay(TrackFeature):
         
 class FeatureFloating(TrackFeature):
     
-    def __init__(self, feature, xmin=None, xmax=None, name=None, level=0, zorder=0, annot_class=None):
-        super().__init__(feature=feature, xmin=xmin, xmax=xmax, name=name, level=level, zorder=zorder, annot_class=annot_class)
+    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
+                         name=name, level=level, zorder=zorder, annot_class=annot_class)
         self.modifies_text = True
 
 
 class FeatureArrow(FeatureFloating):
     
-    def __init__(self, feature, xmin=None, xmax=None, name=None, level=0, zorder=0, annot_class=None):
-        super().__init__(feature=feature, xmin=xmin, xmax=xmax, name=name, level=level, zorder=zorder, annot_class=annot_class)
+    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
+                         name=name, level=level, zorder=zorder, annot_class=annot_class)
         self.show_label = True
         self.label_rel_pos = 1    # position of the annotation label with respect to the strand-specific start
      
@@ -398,42 +376,49 @@ class FeatureArrow(FeatureFloating):
             tag_open = tag_open + '<div id="featId{:d}" class="SH_label">'.format(self.id_)
             tag_close = '</div>' + tag_close
 
-        return tag_open, tag_close
+        return tag_open, tag_close, class_list, self.id_
     
     
 class FeatureTranslation(FeatureFloating):
     
-    def __init__(self, feature, xmin=None, xmax=None, name=None, level=0, zorder=0, annot_class=None, seqrecord=None, codon_table=1):
-        super().__init__(feature=feature, xmin=xmin, xmax=xmax, name=name, level=level, zorder=zorder, annot_class=annot_class)
+    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None,
+                 seqrecord=None, codon_table=1, cds=True, to_stop=False):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
+                         name=name, level=level, zorder=zorder, annot_class=annot_class)
         self.show_label = True
         self.seqrecord = seqrecord
-        self.protein_seq = self.feature.extract(self.seqrecord).translate(table=codon_table, cds=True)
+        self.protein_seq = (self.feature_bio.extract(self.seqrecord).seq
+                            .translate(table=codon_table, cds=cds, to_stop=to_stop))
+        self.protein_seq = str(self.protein_seq)
+        if cds:
+            # add the stop codon
+            self.protein_seq = self.protein_seq + '*'
 
     def get_text(self, text, j):
+        j1 = j + self.xmin
         if self.strand == '+':
-            if self.jstart <= j < self.jend - 1:
-                return '-'
+            j_dna = j1 - self.start_uncropped
+            if VERBOSE >= 2: print("FeatureTranslation:", self.protein_seq)
+            if VERBOSE >= 2: print("strand", self.strand, "j", j, "j1", j1, "j_dna", j_dna, "j_dna // 3", j_dna // 3, "aa", self.protein_seq[j_dna // 3])
+            if j_dna % 3 == 1:
+                return self.protein_seq[j_dna // 3]
             else:
-                return '>'
+                return ''
         elif self.strand == '-':
-            if self.jstart < j <= self.jend - 1:
-                return '-'
+            j_dna = self.end_uncropped - 1 - j1
+            if VERBOSE >= 2: print("strand", self.strand, "j", j, "j1", j1, "j_dna", j_dna, "j_dna // 3", j_dna // 3, "aa", self.protein_seq[j_dna // 3])
+            if j_dna % 3 == 1:
+                return self.protein_seq[j_dna // 3]
             else:
-                return '<'
-
-    # ...
-    # should be able to get the sequence from the feature???
+                return ''
 
 
 class FeatureTick(FeatureFloating):
     
     def __init__(self, position, xmin=None, xmax=None, name=None, level=0, zorder=0):
-        super().__init__(feature=None, xmin=xmin, xmax=xmax, name=name, level=level, zorder=zorder, annot_class='coordinates')
+        super().__init__(start=position, end=position + 1, strand='+', xmin=xmin, xmax=xmax, feature_bio=None,
+                         name='tick', level=level, zorder=zorder, annot_class='coordinates')
         self.show_label = True
-        self.name = 'tick'
-        self.start = position
-        self.end = position + 1
-        self.length = self.end - self.end
 
     def get_text(self, text='', j=None):
         new_text = text
@@ -454,7 +439,7 @@ class FeatureTick(FeatureFloating):
         if self.show_label:
             tag_open = tag_open + '<div id="featId{:d}" class="SH_ticklabel">'.format(self.id_)
             tag_close = '</div>' + tag_close
-        return tag_open, tag_close
+        return tag_open, tag_close, ['SH_ticklabel'], self.id_
 
 
 class FeatureTickLine(FeatureTick):
@@ -478,12 +463,12 @@ class Track():
 
 
 class TrackGroup():
-    """A TrackGroup can only have one sequence.
+    """A TrackGroup can only have one main sequence.
     """
     
     newid = itertools.count()
     
-    def __init__(self, xmin, xmax, seqrecord=None, seqrecord_start=None, name=None, show_translation=False):
+    def __init__(self, xmin, xmax, seqrecord=None, seqrecord_start=None, name=None, show_translation=False, codon_table=1):
         if name is None:
             self.name = '{:d}'.format(next(self.newid))
         else:
@@ -496,6 +481,7 @@ class TrackGroup():
         self.xmax = xmax
         self.features_overlay = []
         self.features_floating = []
+        self.codon_table = codon_table
         if seqrecord is not None:
             self.read_seqrecord(seqrecord, seqrecord_start)
         self.show_translation = show_translation
@@ -553,13 +539,16 @@ class TrackGroup():
                                     xmin=self.xmin, xmax=self.xmax, name=name,
                                     annot_class='CDS', zorder=zorder)
             elif feature_bio.type in ['start_codon']:
-                feat = FeatureOverlay(feature_bio=feature_bio, xmin=self.xmin, xmax=self.xmax, name=name,
+                feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                      xmin=self.xmin, xmax=self.xmax, name=name,
                                       annot_class='start_codon', zorder=zorder)
             elif feature_bio.type in ['region']:
-                feat = FeatureOverlay(feature_bio=feature_bio, xmin=self.xmin, xmax=self.xmax, name=name,
+                feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                      xmin=self.xmin, xmax=self.xmax, name=name,
                                       annot_class='region', zorder=zorder)
             else:
-                feat = FeatureOverlay(feature_bio=feature_bio, xmin=self.xmin, xmax=self.xmax, name=name,
+                feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                      xmin=self.xmin, xmax=self.xmax, name=name,
                                       annot_class=feature_bio.type, zorder=zorder)
                 pass
             if feat is not None and feat.visible:
@@ -594,35 +583,39 @@ class TrackGroup():
                 # Add feature to track
                 self.tracks[level].features.append(feat)
 
-            # Add additional tracks for features that need several tracks together,
-            # for example, translation sequence below the arrow for CDS.
-            levels = set([feat.level for feat in self.features_floating if feat.annot_class == 'CDS'])
-            tracks_copy = self.tracks
-            self.tracks = dict()
-            new_level = min(tracks_copy.keys())
-            for old_level in sorted(tracks_copy.keys()):
-                if old_level in levels:
-                    # add new empty track below
-                    self.tracks[new_level] = Track()
-                    self.tracks[new_level + 1] = tracks_copy[old_level]
-                    for feat in self.tracks[new_level + 1].features:
-                        feat.level = new_level + 1
-                    # add translation
-                    for feat in self.tracks[new_level + 1].features:
-                        if feat.annot_class == 'CDS':
-                            feat2 = FeatureTranslation(feature=feat.feature, xmin=feat.xmin, xmax=feat.xmax,
-                                                       name=feat.name, annot_class='translation',
-                                                       zorder=feat.zorder, seqrecord=self.seqrecord)
-                            feat2.level = new_level
-                            self.tracks[new_level].features.append(feat2)
+            if self.show_translation:
+                # Add additional tracks for features that need several tracks together,
+                # for example, translation sequence below the arrow for CDS.
+                levels = set([feat.level for feat in self.features_floating if feat.annot_class == 'CDS'])
+                tracks_copy = self.tracks
+                self.tracks = dict()
+                new_level = min(tracks_copy.keys())
+                for old_level in sorted(tracks_copy.keys()):
+                    if old_level in levels:
+                        # add new empty track below
+                        self.tracks[new_level] = Track()
+                        self.tracks[new_level + 1] = tracks_copy[old_level]
+                        for feat in self.tracks[new_level + 1].features:
+                            feat.level = new_level + 1
+                        # add translation
+                        for feat in self.tracks[new_level + 1].features:
+                            if feat.annot_class == 'CDS':
+                                feat2 = FeatureTranslation(feature_bio=feat.feature_bio,
+                                                           start=feat.start, end=feat.end, strand=feat.strand,
+                                                           xmin=feat.xmin, xmax=feat.xmax,
+                                                           name=feat.name, annot_class='translation',
+                                                           zorder=feat.zorder, seqrecord=self.seqrecord,
+                                                           codon_table=self.codon_table)
+                                feat2.level = new_level
+                                self.tracks[new_level].features.append(feat2)
 
-                    new_level += 2
-                else:
-                    # copy track
-                    self.tracks[new_level] = tracks_copy[old_level]
-                    for feat in self.tracks[new_level].features:
-                        feat.level = new_level
-                    new_level += 1
+                        new_level += 2
+                    else:
+                        # copy track
+                        self.tracks[new_level] = tracks_copy[old_level]
+                        for feat in self.tracks[new_level].features:
+                            feat.level = new_level
+                        new_level += 1
                 
                 
         if len(self.features_overlay) > 0:
@@ -684,7 +677,7 @@ class Element():
 
 class TrackHighway():
     
-    def __init__(self, seqrecord, seqrecord_start=0, xmin=None, xmax=None, show_translation=False):
+    def __init__(self, seqrecord, seqrecord_start=0, xmin=None, xmax=None, show_translation=False, codon_table=1):
         # xmin, xmax are the global coordinates system and are **FIXED**
         self.trackgroup_list = []
         self.xmin = xmin
@@ -693,17 +686,18 @@ class TrackHighway():
             self.xmin = 0
         if xmax is None:
             self.xmax = len(seqrecord)
-        self.add_seqrecord(seqrecord=seqrecord, seqrecord_start=seqrecord_start, show_translation=show_translation)
+        self.add_seqrecord(seqrecord=seqrecord, seqrecord_start=seqrecord_start, show_translation=show_translation,
+                           codon_table=codon_table)
         self.hspace = 1
         self.array = None
         self.length = 0
         self.height = 0
         self.header_list = []
         
-    def add_seqrecord(self, seqrecord, seqrecord_start=0, show_translation=False):
+    def add_seqrecord(self, seqrecord, seqrecord_start=0, show_translation=False, codon_table=1):
         assert seqrecord_start >= 0
         trackgroup = TrackGroup(xmin=self.xmin, xmax=self.xmax, seqrecord=seqrecord,
-                                seqrecord_start=seqrecord_start, show_translation=show_translation)
+                                seqrecord_start=seqrecord_start, show_translation=show_translation, codon_table=codon_table)
         trackgroup.organize_tracks()
         self.trackgroup_list.append(trackgroup)
         
@@ -896,11 +890,18 @@ class HTMLWriter():
                             # priority of the feature annotations.
                             # Features are ordered following zorder: last one, highest zorder, is the most important.
                             for feat in features[::-1]:
-                                tag_open, tag_close = feat.get_css_tag(j)
+                                tag_open, tag_close, class_list, id_ = feat.get_css_tag(j)
                                 ss = tag_open + ss + tag_close
                             ss = element_open + ss + element_close
+                            # We also apply the css classes to the td, because width, height and padding
+                            # can only be effective for the td element in the table.
+                            css_classes_td = []
+                            for feat in features[::-1]:
+                                tag_open, tag_close, class_list, id_ = feat.get_css_tag(j)
+                                css_classes_td = css_classes_td + class_list
+                            css_classes_td = ' '.join(css_classes_td)
                             ss = (indent_element +
-                                  '<td class="SH_td">' +
+                                  '<td class="SH_td {}">'.format(css_classes_td) +
                                   ss + '</td>\n')
                             s += ss
                     
@@ -933,7 +934,7 @@ class HTMLWriter():
                     # priority of the feature annotations.
                     # Features are ordered following zorder: last one, highest zorder, is the most important.
                     for feat in features[::-1]:
-                        tag_open, tag_close = feat.get_css_tag(j)
+                        tag_open, tag_close, class_list, id_ = feat.get_css_tag(j)
                         ss = tag_open + ss + tag_close
                     element_open = '<div class="SH_element">'
                     element_close = '</div>'
@@ -1011,59 +1012,80 @@ class HTMLWriter():
 
         style = ''
         if self.mode == 'fixed_table':
-            style += ("""
+            style += """
 <style>
     .SH_container {{
         font-size: {}{};
         overflow-x: auto;
-    }}
-    .SH_table {{
+    }}""".format(self.css_base_fontsize, self.css_units)
+            style += """
+    .SH_table {
         table-layout: fixed;
         border-width: 0;
         border-collapse: collapse;
         border-spacing: 0;
         height: 0;    <!-- This is needed in order to set the height of 100% for rows -->
-    }}
-    .rendered_html tbody tr.SH_tr {{
+    }
+    .rendered_html tbody tr.SH_tr {
         background: transparent;    <!-- set back the background to transparent,
                                          not to interfere with annotation colors -->
-    }}
-    td.SH_td {{
-        padding:0;
-        height: 100%;
-    }}
+    }"""
+            style += """
     td.SH_header_col {{
         min-width: {}{};
         text-align: right;
         padding-right: {}{};
-        }}
+    }}""".format(self.css_base_fontsize*self.css_header_colwidth, self.css_units,
+                 2*self.css_base_fontsize*self.css_seq_colwidth, self.css_units)
+            style += """
     .SH_track_default {{
         font-family:monospace;
         font-size: {}{};
-    }}
+    }}""".format(self.css_base_fontsize, self.css_units,)
+            style += """
     tr.SH_spacing_row {{
         height: {}{};
-    }}
+    }}""".format(2*self.css_base_fontsize*self.css_track_height, self.css_units,)
+            style += """
     .SH_track_default > td.SH_td {{
         height: {}{};
+        padding: 0;
+        padding-top: {}{};
         padding-bottom: {}{};
-    }}
+    }}""".format(# adding the padding value to the height of the row
+                 (1 + 0.175 + 0.175)*self.css_base_fontsize*self.css_track_height, self.css_units,
+                 0.175*self.css_base_fontsize*self.css_track_height, self.css_units,
+                 0.175*self.css_base_fontsize*self.css_track_height, self.css_units,)
+            style += """
     .SH_track0 > td.SH_td {{
         height: {}{};
-        padding-bottom: {}{};
         padding-top: {}{};
-    }}
+        padding-bottom: {}{};
+    }}""".format(# padding on the top and bottom
+                 (1 + 0.25 + 0.25)*self.css_base_fontsize*self.css_track_height, self.css_units,
+                 0.25*self.css_base_fontsize*self.css_track_height, self.css_units,
+                 0.25*self.css_base_fontsize*self.css_track_height, self.css_units,)
+            style += """
     .SH_track_minus_strand > td.SH_td {{
         height: {}{};
-        padding-bottom: 0;
-    }}
+        padding-bottom: {}{};
+    }}""".format(# no padding
+                 (1 + 0.2)*self.css_base_fontsize*self.css_track_height, self.css_units,
+                 0.2*self.css_base_fontsize*self.css_track_height, self.css_units)
+            style += """
     .SH_track_coordinates > td.SH_td {{
         height: {}{};
         padding-top: 0;
         padding-bottom: 0;
-    }}
-    .SH_track_minus_strand > td.SH_td {{
-    }}
+    }}""".format(0.8*self.css_base_fontsize*self.css_track_height, self.css_units,)
+            style += """
+    td.SH_td.SH_CDS {{
+    }}""".format()
+            style += """
+    td.SH_td.SH_translation {{
+        padding-top: 0;
+    }}""".format()
+            style += """
     .SH_element {{
         white-space: nowrap;
         padding: 0px;
@@ -1072,10 +1094,16 @@ class HTMLWriter():
         width: {}{};
         height:100%;
         text-align: center;
-    }}
+    }}""".format(self.css_base_fontsize*self.css_seq_colwidth, self.css_units,)
+            style += """
     .SH_label {{
         font-size: {}{};
-    }}
+    }}""".format(# IMPORTANT: the table row will adjust their height depending on the larger
+                 # cell. Even if we set manually the height of the cell and internal div,
+                 # it seems that the row adapts. Thus, it is important that no element,
+                 # including the text labels, do not overcome the height limit.
+                 0.8*self.css_base_fontsize, self.css_units,)
+            style += """
     .SH_ticklabel {{
         font-size: {}{};
         z-index: 10;
@@ -1083,42 +1111,7 @@ class HTMLWriter():
         text-align: center;
         margin-left: -100%;
         margin-right: -100%;
-    }}
-"""
-                .format(#.SH_container
-                        self.css_base_fontsize, self.css_units,
-                        #td.SH_header_col
-                        self.css_base_fontsize*self.css_header_colwidth, self.css_units,
-                        2*self.css_base_fontsize*self.css_seq_colwidth, self.css_units,
-                        #SH_track_default
-                        self.css_base_fontsize, self.css_units,
-                        #tr.SH_spacing_row
-                        2*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        #.SH_track_default > td.SH_td
-                        # adding the padding value to the height of the row
-                        (1 + 0.25)*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        0.25*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        #.SH_track0 > td.SH_td
-                        # padding on the top and bottom
-                        (1 + 0.25 + 0.25)*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        0.25*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        0.25*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        #.SH_track_minus_strand > td.SH_td
-                        # no padding
-                        1*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        #.SH_track_coordinates > td.SH_td
-                        0.8*self.css_base_fontsize*self.css_track_height, self.css_units,
-                        #.SH_track_minus_strand > td.SH_td
-                        #.SH_element
-                        self.css_base_fontsize*self.css_seq_colwidth, self.css_units,
-                        #.SH_label
-                        # IMPORTANT: the table row will adjust their height depending on the larger
-                        # cell. Even if we set manually the height of the cell and internal div,
-                        # it seems that the row adapts. Thus, it is important that no element,
-                        # including the text labels, do not overcome the height limit.
-                        0.8*self.css_base_fontsize, self.css_units,
-                        #.SH_ticklabel
-                        0.6*self.css_base_fontsize*self.css_track_height, self.css_units))
+    }}""".format(0.6*self.css_base_fontsize*self.css_track_height, self.css_units)
 
 
         elif self.mode == 'inline-block':
