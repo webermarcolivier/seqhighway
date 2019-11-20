@@ -415,6 +415,51 @@ class FeatureTranslation(FeatureFloating):
                 return ''
 
 
+class FeatureRestrictionSite(FeatureOverlay):
+    def __init__(self, start, end, xmin=None, xmax=None, feature_bio=None, name=None, level=0, zorder=0,
+                 annot_class=None, cut_position=None):
+        super().__init__(start=start, end=end, strand=None, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
+                         name=name, level=level, zorder=zorder, annot_class=annot_class)
+        self.show_label = True
+        self.cut_position = cut_position
+
+
+    def get_css(self, track_height, css_units, colwidth, base_fontsize):
+        css_class = super().get_css(track_height, css_units, colwidth, base_fontsize)
+        css_class = ''
+        return css_class
+    
+    def get_css_tag(self, j):
+        j1 = j + self.xmin
+        class_list = []
+        style = 'normal'
+        if style == 'normal':
+            if j1 == self.cut_position[0]:
+                class1 = 'SH_restriction_site_strandp_left'
+            elif self.cut_position[0] < j1 < self.cut_position[1]:
+                class1 = 'SH_restriction_site_strandp_middle'
+            elif j1 == self.cut_position[1]:
+                class1 = 'SH_restriction_site_strandp_right'
+            else:
+                class1 = 'SH_restriction_site'
+        class_list = [class1]
+
+        tag_open = '<div id="featId{:d}" class="{}">'.format(self.id_, ' '.join(class_list))
+        tag_close = '</div>'
+        
+        # We have to add one more div level, in order to be able to float the label to the left or right
+        # in the inner div, and keep the outer div to the 100% width with its background.
+        # if self.show_label:
+        #     if ((self.strand == '+' and j == self.jstart + self.label_rel_pos) or
+        #             (self.strand == '-' and j == self.jend - 1 - self.label_rel_pos)):
+        #         tag_open = tag_open + '<div id="featId{:d}" class="SH_label">'.format(self.id_)
+        #         tag_close = '</div>' + tag_close
+
+        return tag_open, tag_close, class_list, self.id_
+
+
+
+
 class FeatureTick(FeatureFloating):
     
     def __init__(self, position, xmin=None, xmax=None, name=None, level=0, zorder=0):
@@ -454,6 +499,37 @@ class FeatureTickLine(FeatureTick):
         if self.show_label:
             new_text = '|'
         return new_text
+
+
+class FeatureSequenceLabel(FeatureFloating):
+    
+    def __init__(self, start, end, xmin=None, xmax=None, name=None):
+        super().__init__(start=start, end=end, strand='+', xmin=xmin, xmax=xmax, feature_bio=None,
+                         name=name, level=1, zorder=0, annot_class='sequence_label')
+        self.show_label = True
+
+    def get_text(self, text, j):
+        if self.strand == '+':
+            # write the label at the start position
+            if j == 0:
+                return text
+            else:
+                return ''
+            
+    def get_css(self, track_height, css_units, colwidth, base_fontsize):
+        css_class = ''
+        return css_class
+    
+    def get_css_tag(self, j):
+        tag_open = ''
+        tag_close = ''
+        # We have to add one more div level, in order to be able to float the label to the left or right
+        # in the inner div, and keep the outer div to the 100% width with its background.
+        if self.show_label:
+            tag_open = tag_open + '<div id="featId{:d}" class="SH_sequence_label">'.format(self.id_)
+            tag_close = '</div>' + tag_close
+        return tag_open, tag_close, ['SH_sequence_label'], self.id_
+
 
         
 class Track():
@@ -552,6 +628,26 @@ class TrackGroup():
                 feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
                                       xmin=self.xmin, xmax=self.xmax, name=name,
                                       annot_class='region', zorder=zorder)
+            elif feature_bio.type in ['restriction_site']:
+                cut_position = None
+                if 'enzyme' in feature_bio.qualifiers.keys():
+                    enzyme = feature_bio.qualifiers['enzyme'][0]
+                    if enzyme == 'EcoRI':
+                        # Example:
+                        # 5'---G     AATTC---3'
+                        # 3'---CTTAA     G---5'
+                        cut_position = (start + 1, end - 1)
+                else:
+                    enzyme = None
+                    # Enzyme name can be omitted if the exact cleavage site is known
+                    if 'cut_position' in feature_bio.qualifiers.keys():
+                        cut_position = feature_bio.qualifiers['cut_position']
+                    else:
+                        raise ValueError("Either the enzyme name or the exact cut_position has to be given.")
+                feat = FeatureRestrictionSite(feature_bio=feature_bio, start=start, end=end,
+                                              xmin=self.xmin, xmax=self.xmax, name=enzyme,
+                                              annot_class='restriction_site', zorder=zorder,
+                                              cut_position=cut_position)
             else:
                 feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
                                       xmin=self.xmin, xmax=self.xmax, name=name,
@@ -570,6 +666,18 @@ class TrackGroup():
                 self.tracks[k - 1] = self.tracks.pop(k)
         self.tracks[-1] = Track(name='', track_class='minus_strand',
                                 seq=str(self.seqrecord_cropped.reverse_complement().seq)[::-1])
+
+    def add_sequence_label_track(self):
+        positive_track_keys = [k for k in self.tracks.keys() if k > 0]
+        if len(positive_track_keys) > 0:
+            # Shift all upper tracks one unit up
+            for k in sorted(positive_track_keys, reverse=True):
+                self.tracks[k + 1] = self.tracks.pop(k)
+        self.tracks[1] = Track(name='', track_class='sequence_label')
+
+        feat = FeatureTickLine(position=x, xmin=self.xmin, xmax=self.xmax)
+        trackgroup.features_floating.append(feat)
+        trackgroup.tracks[1].features.append(feat)
     
     def organize_tracks(self):
         if VERBOSE >= 1: print("TrackGroup:organize_tracks")
@@ -864,6 +972,8 @@ class HTMLWriter():
                         track_class_css = 'SH_track_default SH_track_coordinates'
                     elif track_class == 'minus_strand':
                         track_class_css = 'SH_track_default SH_track_minus_strand'
+                    elif track_class == 'sequence_label':
+                        track_class_css = 'SH_track_default SH_track_sequence_label'
                     s += (indent_row +
                           '<tr class="SH_tr SH_trackgroup{:d} SH_track{:d} {}">\n'
                           .format(element.track_group_id, element.track_id, track_class_css))
@@ -952,7 +1062,9 @@ class HTMLWriter():
                     elif track_class == 'coordinates':
                         track_class_css = 'SH_track_default SH_track_coordinates'
                     elif track_class == 'minus_strand':
-                            track_class_css = 'SH_track_default SH_track_minus_strand'
+                        track_class_css = 'SH_track_default SH_track_minus_strand'
+                    elif track_class == 'sequence_label':
+                        track_class_css = 'SH_track_default SH_track_sequence_label'
                     ss = (indent + indent +
                           '<div class="SH_trackgroup{:d} SH_track{:d} {}">'
                           .format(element.track_group_id, element.track_id, track_class_css) +
@@ -993,6 +1105,9 @@ class HTMLWriter():
                             track_class_css = 'SH_track_default SH_track_coordinates'
                         elif track_class == 'minus_strand':
                             track_class_css = 'SH_track_default SH_track_minus_strand'
+                        elif track_class == 'sequence_label':
+                            track_class_css = 'SH_track_default SH_track_sequence_label'
+
                         s_element = (indent1 + indent + indent + indent +
                                      '<div class="SH_trackgroup{:d} SH_track{:d} {}">'
                                      .format(element.track_group_id, element.track_id, track_class_css) +
@@ -1085,6 +1200,11 @@ class HTMLWriter():
         padding-bottom: 0;
     }}""".format(0.8*self.css_base_fontsize*self.css_track_height, self.css_units,)
             style += """
+    .SH_track_sequence_label > td.SH_td {{
+        height: {}{};
+        padding-bottom: 0;
+    }}""".format(1*self.css_base_fontsize*self.css_track_height, self.css_units,)
+            style += """
     td.SH_td.SH_CDS {{
     }}""".format()
             style += """
@@ -1118,6 +1238,29 @@ class HTMLWriter():
         margin-left: -100%;
         margin-right: -100%;
     }}\n""".format(0.6*self.css_base_fontsize*self.css_track_height, self.css_units)
+            style += """
+    .SH_track0 > td.SH_restriction_site_strandp_left {{
+        border-top: 0;
+        border-bottom: 1px;
+        border-left: 1px;
+        border-right: 0;
+        border-style: solid;
+    }}
+    .SH_track0 > td.SH_restriction_site_strandp_middle {{
+        border-top: 0;
+        border-bottom: 1px;
+        border-left: 0;
+        border-right: 0;
+        border-style: solid;
+    }}
+    .SH_track0 > td.SH_restriction_site_strandp_right {{
+        border-top: 0;
+        border-bottom: 1px;
+        border-left: 0;
+        border-right: 0;
+        border-style: solid;
+    }}\n""".format()
+
 
 
         elif self.mode == 'inline-block':
@@ -1243,6 +1386,10 @@ class HTMLWriter():
         height: {}{};
         margin-top: {}{};
     }}
+    .SH_track_sequence_label {{
+        margin-top: {}{};
+        margin-bottom: {}{};
+    }}
     .SH_track_coordinates {{
         height: {}{};
         margin-top: {}{};
@@ -1283,6 +1430,9 @@ class HTMLWriter():
                         #SH_track0
                         self.css_base_fontsize*self.css_track_height, self.css_units,
                         0.5*self.css_base_fontsize*self.css_track_height, self.css_units,
+                        #SH_track_sequence_label
+                        0*self.css_base_fontsize*self.css_track_height, self.css_units,
+                        0*self.css_base_fontsize*self.css_track_height, self.css_units,
                         #SH_trackCoordinates
                         0.8*self.css_base_fontsize*self.css_track_height, self.css_units,
                         0*self.css_base_fontsize*self.css_track_height, self.css_units,
