@@ -2,7 +2,7 @@
 
 SeQHighway is a python library to visualize biological annotated sequences, e.g. from genbank files, in HTML / CSS.
 
-!()[example/seqhighway.html.pdf.png]
+![](example/seqhighway.html.pdf.png)
 
 Given a Biopython SeqRecord as input (for example parsed from a genbank file), SeqHighway will generate an HTML representation by using pure HTML/CSS (with optionaly some svg graphics) of the sequence with overlay annotations.
 
