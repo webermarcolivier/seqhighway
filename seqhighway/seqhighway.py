@@ -27,6 +27,22 @@ restriction_dict = {
     # 5'---GAT  ATC---3'
     # 3'---CTA  TAG---5'
     'EcoRV':{'motif':'GATATC', 'cut_position':(+3, -3)},
+    # HindIII
+    # 5'---A     AGCTT---3'
+    # 3'---TTCGA     A---5'
+    'HindIII':{'motif':'AAGCTT', 'cut_position':(+1, -1)},
+    # BglII
+    # 5'---A     GATCT---3'
+    # 3'---TCTAG     A---5'
+    'BglII':{'motif':'AGATCT', 'cut_position':(+1, -1)},
+    # PstI
+    # 5'---CTGCA  G---3'
+    # 3'---G  ACGTC---5'
+    'PstI':{'motif':'CTGCAG', 'cut_position':(+1, -1)},
+    # SalI
+    # 5'---G  TCGAC---3'
+    # 3'---CAGCT  G---5'
+    'SalI':{'motif':'GTCGAC', 'cut_position':(+1, -1)},
 }
 
 def get_color_map(x="Blues"):
