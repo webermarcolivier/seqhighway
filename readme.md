@@ -18,8 +18,6 @@ Given a Biopython SeqRecord as input (for example parsed from a genbank file), S
 
 ## Examples of use
 
-put the full example
-
 ```python
 import numpy as np
 from Bio import SeqIO
@@ -88,6 +86,7 @@ display(HTML(html))
 
 ## Future improvements
 
+- Improvement of arrow graphics (using SVG for example)
 - Highlight region of the sequence for all tracks (for example, with background color).
 - Spliced coding sequences with introns and exons.
 - Sequence alignments.
