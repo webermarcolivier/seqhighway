@@ -441,9 +441,9 @@ class FeatureTranslation(FeatureFloating):
 
 
 class FeatureRestrictionSite(FeatureOverlay):
-    def __init__(self, start, end, cut_position=None, **kwargs):
+    def __init__(self, start, end, cut_position=None, strand='+', **kwargs):
         self.cut_position = cut_position
-        super().__init__(start=start, end=end, strand=None, **kwargs)
+        super().__init__(start=start, end=end, strand=strand, **kwargs)
         self.show_label = True
 
 
@@ -470,14 +470,6 @@ class FeatureRestrictionSite(FeatureOverlay):
         tag_open = '<div id="featId{:d}" class="{}">'.format(self.id_, ' '.join(class_list))
         tag_close = '</div>'
         
-        # We have to add one more div level, in order to be able to float the label to the left or right
-        # in the inner div, and keep the outer div to the 100% width with its background.
-        # if self.show_label:
-        #     if ((self.strand == '+' and j == self.jstart + self.label_rel_pos) or
-        #             (self.strand == '-' and j == self.jend - 1 - self.label_rel_pos)):
-        #         tag_open = tag_open + '<div id="featId{:d}" class="SH_label">'.format(self.id_)
-        #         tag_close = '</div>' + tag_close
-
         return tag_open, tag_close, class_list, self.id_
 
 
@@ -616,6 +608,13 @@ class TrackGroup():
         
     def get_main_track(self):
         return self.tracks[0]
+
+    def get_minus_strand_track(self):
+        ts = [track for track in self.tracks.values() if track.track_class == 'minus_strand']
+        if len(ts) > 0:
+            return ts[0]
+        else:
+            return None
     
     def remove_all_features_from_track(self, track):
         for feat in self.features_overlay:
@@ -704,6 +703,10 @@ class TrackGroup():
                                                 xmin=self.xmin, xmax=self.xmax, name=enzyme,
                                                 annot_class='restriction_site', zorder=zorder,
                                                 cut_position=cut_position),
+                         FeatureRestrictionSite(feature_bio=feature_bio, start=start, end=end,
+                                                xmin=self.xmin, xmax=self.xmax, name=enzyme,
+                                                annot_class='restriction_site', zorder=zorder,
+                                                cut_position=cut_position, strand='-'),
                          FeatureRestrictionSiteLabel(start=cut_position[0], end=end,
                                                      xmin=self.xmin, xmax=self.xmax, name=enzyme,
                                                      zorder=zorder, level=1)]
@@ -765,6 +768,11 @@ class TrackGroup():
                                                   xmin=self.xmin, xmax=self.xmax, name=enzyme,
                                                   annot_class='restriction_site',
                                                   cut_position=cut_position)
+                    self.features_overlay.append(feat)
+                    feat = FeatureRestrictionSite(feature_bio=None, start=start, end=end,
+                                                  xmin=self.xmin, xmax=self.xmax, name=enzyme,
+                                                  annot_class='restriction_site',
+                                                  cut_position=cut_position, strand='-')
                     self.features_overlay.append(feat)
                     feat = FeatureRestrictionSiteLabel(start=cut_position[0], end=end,
                                                        xmin=self.xmin, xmax=self.xmax, name=enzyme,
@@ -866,26 +874,68 @@ class TrackGroup():
                 if VERBOSE >= 2: print("organize_tracks: removing overlay feature", feat,
                                        "from track #", feat.track)
 
+        # if len(self.features_overlay) > 0:
+        #     feat_len_list = [feat.length for feat in self.features_overlay]
+        #     # Sort features with longest one first, which will have the lowest zorder
+        #     self.features_overlay = sorted(self.features_overlay, key=lambda feat: feat.length)[::-1]
+        #     base_level = 0
+        #     features_levels = compute_features_levels(self.features_overlay, base_level=base_level)
+        #     for feat, level in features_levels.items():
+        #         # Not for features that have a specific z_order
+        #         if feat.zorder == 0:
+        #             feat.zorder = level
+        #         else:
+        #             # Keep the user-defined zorder
+        #             feat.zorder = feat.zorder
+        #     for feat in self.features_overlay:
+        #         feat.level = 0
+        #         assert 0 in self.tracks.keys()
+        #         # Add feature to track
+        #         self.tracks[0].features.append(feat)
+        #         feat.track = self.tracks[0]
+
         # Add overlay features to the main sequence track
-        if len(self.features_overlay) > 0:
-            feat_len_list = [feat.length for feat in self.features_overlay]
-            # Sort features with longest one first, which will have the lowest zorder
-            self.features_overlay = sorted(self.features_overlay, key=lambda feat: feat.length)[::-1]
-            base_level = 0
-            features_levels = compute_features_levels(self.features_overlay, base_level=base_level)
-            for feat, level in features_levels.items():
-                # Not for features that have a specific z_order
-                if feat.zorder == 0:
-                    feat.zorder = level
-                else:
-                    # Keep the user-defined zorder
-                    feat.zorder = feat.zorder
-            for feat in self.features_overlay:
-                feat.level = 0
-                assert 0 in self.tracks.keys()
-                # Add feature to track
-                self.tracks[0].features.append(feat)
-                feat.track = self.tracks[0]
+        if self.get_main_track() is not None:
+            features = [feat for feat in self.features_overlay if feat.strand == '+']
+            if len(features) > 0:
+                feat_len_list = [feat.length for feat in features]
+                # Sort features with longest one first, which will have the lowest zorder
+                features = sorted(features, key=lambda feat: feat.length)[::-1]
+                base_level = 0
+                features_levels = compute_features_levels(features, base_level=base_level)
+                for feat, level in features_levels.items():
+                    # Not for features that have a specific z_order
+                    if feat.zorder == 0:
+                        feat.zorder = level
+                    else:
+                        # Keep the user-defined zorder
+                        feat.zorder = feat.zorder
+                for feat in features:
+                    # Add feature to track
+                    self.get_main_track().features.append(feat)
+                    feat.track = self.get_main_track()
+
+        # Add overlay features to the minus sequence track
+        if self.get_minus_strand_track() is not None:
+            features = [feat for feat in self.features_overlay if feat.strand == '-']
+            if len(features) > 0:
+                feat_len_list = [feat.length for feat in features]
+                # Sort features with longest one first, which will have the lowest zorder
+                features = sorted(features, key=lambda feat: feat.length)[::-1]
+                base_level = 0
+                features_levels = compute_features_levels(features, base_level=base_level)
+                for feat, level in features_levels.items():
+                    # Not for features that have a specific z_order
+                    if feat.zorder == 0:
+                        feat.zorder = level
+                    else:
+                        # Keep the user-defined zorder
+                        feat.zorder = feat.zorder
+                for feat in features:
+                    # Add feature to track
+                    self.get_minus_strand_track().features.append(feat)
+                    feat.track = self.get_minus_strand_track()
+
         for feat in self.features_overlay:
             print("features_overlay", feat.track, feat)
         for feat in self.features_floating:
