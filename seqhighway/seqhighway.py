@@ -11,10 +11,22 @@ from .config import config_default as CONFIG
 VERBOSE = 2
 
 restriction_dict = {
-    # Example:
+    # EcoRI
     # 5'---G     AATTC---3'
     # 3'---CTTAA     G---5'
-    'EcoRI':{'motif':'GAATTC', 'cut_position':(+1, -1)}
+    'EcoRI':{'motif':'GAATTC', 'cut_position':(+1, -1)},
+    # BamHI
+    # 5'---G     GATCC---3'
+    # 3'---CCTAG     G---5'
+    'BamHI':{'motif':'GGATCC', 'cut_position':(+1, -1)},
+    # BglII
+    # 5'---A     GATCT---3'
+    # 3'---TCTAG     A---5'
+    'BamHI':{'motif':'AGATCT', 'cut_position':(+1, -1)},
+    # EcoRV
+    # 5'---GAT  ATC---3'
+    # 3'---CTA  TAG---5'
+    'EcoRV':{'motif':'GATATC', 'cut_position':(+3, -3)},
 }
 
 def get_color_map(x="Blues"):
@@ -729,11 +741,12 @@ class TrackGroup():
                 if VERBOSE >= 2: print(enzyme, re_motif, m.start(), m.end(), m.group())
                 start = m.start()
                 end = m.end()
+                if VERBOSE >= 2: print("restriction site motif found", enzyme, start, end)
                 # Test if the feature has already been added
                 exists = any([feat.start == start and issubclass(type(feat), FeatureRestrictionSite)
                               for feat in self.features_overlay])
                 if not exists:
-                    print("adding restriction site feature", enzyme, start, end)
+                    if VERBOSE >= 2: print("adding restriction site feature", enzyme, start, end)
                     cut_shift_5p = restrict_dict['cut_position'][0]
                     cut_shift_3p = restrict_dict['cut_position'][1]
                     cut_position = (start + cut_shift_5p, end + cut_shift_3p)
