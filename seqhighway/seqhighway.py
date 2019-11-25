@@ -617,6 +617,17 @@ class TrackGroup():
     def get_main_track(self):
         return self.tracks[0]
     
+    def remove_all_features_from_track(self, track):
+        for feat in self.features_overlay:
+            if feat.track == track:
+                feat.track = None
+        for feat in self.features_floating:
+            if feat.track == track:
+                feat.track = None
+        for feat in self.features_fixed:
+            if feat.track == track:
+                feat.track = None
+
     def read_seqrecord(self, seqrecord, seqrecord_start):
         # We read the seqrecord and build a list of tracks, with main track being the sequence
         # and with additional tracks for floating annotations
@@ -766,12 +777,15 @@ class TrackGroup():
     def organize_tracks(self):
         if VERBOSE >= 1: print("TrackGroup:organize_tracks")
 
-        # Create the fixed sequence label track and add all sequence label features
+        # Remove sequence label track
         for i in list(self.tracks.keys()):
             if self.tracks[i].track_class == 'sequence_label':
+                self.remove_all_features_from_track(self.tracks[i])
                 self.tracks.pop(i)
                 if VERBOSE >= 2: print("organize_tracks: removing track", i)
-        # For some reason self.has_sequence_label_feat here is set back to FALSE while it was True just before
+
+        # Create the fixed sequence label track and add features
+        # Remark: For some reason self.has_sequence_label_feat here is set back to FALSE while it was True just before
         self.has_sequence_label_feat = any([issubclass(type(feat), FeatureSequenceLabel) for feat
                                             in self.features_fixed])
         if self.has_sequence_label_feat:
@@ -780,16 +794,17 @@ class TrackGroup():
             for feat in self.features_fixed:
                 if issubclass(type(feat), FeatureSequenceLabel):
                     self.tracks[1].features.append(feat)
-
-        # Organize floating features into multiple tracks, computing smart layout
+                    feat.track = self.tracks[1]
 
         # Remove all floating tracks
         for i in list(self.tracks.keys()):
             if VERBOSE >= 2: print("organize_tracks: self.tracks[i].fixed", i, self.tracks[i].fixed)
             if not self.tracks[i].fixed:
+                self.remove_all_features_from_track(self.tracks[i])
                 self.tracks.pop(i)
                 if VERBOSE >= 2: print("organize_tracks: removing track", i)
 
+        # Organize floating features into multiple tracks, computing smart layout
         if len(self.features_floating) > 0:
             feat_len_list = [feat.length for feat in self.features_floating]
             # Sort features with longer one first
@@ -805,6 +820,7 @@ class TrackGroup():
                     self.tracks[level] = Track(fixed=False)
                 # Add feature to track
                 self.tracks[level].features.append(feat)
+                feat.track = self.tracks[level]
 
             if self.show_translation:
                 # Add additional tracks for features that need several tracks together,
@@ -820,6 +836,7 @@ class TrackGroup():
                         self.tracks[new_level + 1] = tracks_copy[old_level]
                         for feat in self.tracks[new_level + 1].features:
                             feat.level = new_level + 1
+                            feat.track = self.tracks[new_level + 1]
                         # add translation
                         for feat in self.tracks[new_level + 1].features:
                             if feat.annot_class == 'CDS':
@@ -830,6 +847,7 @@ class TrackGroup():
                                                            zorder=feat.zorder, seqrecord=self.seqrecord,
                                                            codon_table=self.codon_table)
                                 feat2.level = new_level
+                                feat2.track = self.tracks[new_level]
                                 self.tracks[new_level].features.append(feat2)
 
                         new_level += 2
@@ -838,8 +856,16 @@ class TrackGroup():
                         self.tracks[new_level] = tracks_copy[old_level]
                         for feat in self.tracks[new_level].features:
                             feat.level = new_level
+                            feat.track = self.tracks[new_level]
                         new_level += 1
-                
+
+        # Remove all overlay features
+        for feat in self.features_overlay:
+            if feat.track is not None:
+                feat.track.features.remove(feat)
+                if VERBOSE >= 2: print("organize_tracks: removing overlay feature", feat,
+                                       "from track #", feat.track.level)
+
         # Add overlay features to the main sequence track
         if len(self.features_overlay) > 0:
             feat_len_list = [feat.length for feat in self.features_overlay]
@@ -859,6 +885,13 @@ class TrackGroup():
                 assert 0 in self.tracks.keys()
                 # Add feature to track
                 self.tracks[0].features.append(feat)
+                feat.track = self.tracks[0]
+        for feat in self.features_overlay:
+            print("features_overlay", feat.track.level, feat)
+        for feat in self.features_floating:
+            print("features_floating", feat.track.level, feat)
+        for feat in self.features_fixed:
+            print("features_fixed", feat.track.level, feat)
                 
     def get_dimensions(self):
         height = max(self.tracks.keys()) - min(self.tracks.keys()) + 1
@@ -1387,8 +1420,29 @@ class HTMLWriter():
     }}
     .SH_track0 > td.SH_restriction_site_strandp_right {{
         border-top: 0;
-        border-bottom: 1px;
+        border-bottom: 0;
         border-left: 0;
+        border-right: 0;
+        border-style: solid;
+    }}
+    .SH_track_minus_strand > td.SH_restriction_site_strandp_left {{
+        border-top: 0;
+        border-bottom: 0;
+        border-left: 0;
+        border-right: 0;
+        border-style: solid;
+    }}
+    .SH_track_minus_strand > td.SH_restriction_site_strandp_middle {{
+        border-top: 0;
+        border-bottom: 0;
+        border-left: 0;
+        border-right: 0;
+        border-style: solid;
+    }}
+    .SH_track_minus_strand > td.SH_restriction_site_strandp_right {{
+        border-top: 0;
+        border-bottom: 0;
+        border-left: 1px;
         border-right: 0;
         border-style: solid;
     }}\n""".format()
