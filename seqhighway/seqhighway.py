@@ -456,16 +456,21 @@ class FeatureRestrictionSite(FeatureOverlay):
         j1 = j + self.xmin
         class_list = []
         style = 'normal'
+        cut_left = self.cut_position[0]
+        cut_right = self.cut_position[1]
+        print("FeatureRestrictionSite", self.cut_position, cut_left, cut_right, j1)
+        class_list = ['SH_restriction_site']
         if style == 'normal':
-            if j1 == self.cut_position[0]:
+            if j1 == cut_left:
                 class1 = 'SH_restriction_site_strandp_left'
-            elif self.cut_position[0] < j1 < self.cut_position[1]:
+            elif cut_left < j1 and j1 < cut_right:
                 class1 = 'SH_restriction_site_strandp_middle'
-            elif j1 == self.cut_position[1]:
+            elif j1 == cut_right:
                 class1 = 'SH_restriction_site_strandp_right'
             else:
-                class1 = 'SH_restriction_site'
-        class_list = [class1]
+                class1 = None
+        if class1 is not None:
+            class_list.append(class1)
 
         tag_open = '<div id="featId{:d}" class="{}">'.format(self.id_, ' '.join(class_list))
         tag_close = '</div>'
@@ -693,7 +698,7 @@ class TrackGroup():
                     else:
                         cut_shift_5p = restriction_dict[enzyme]['cut_position'][0]
                         cut_shift_3p = restriction_dict[enzyme]['cut_position'][1]
-                        cut_position = (start + cut_shift_5p, end + cut_shift_3p)
+                        cut_position = (start + cut_shift_5p - 1, end + cut_shift_3p)
                 else:
                     enzyme = None
                     # Enzyme name can be omitted if the exact cleavage site is known
@@ -709,7 +714,7 @@ class TrackGroup():
                                                 xmin=self.xmin, xmax=self.xmax, name=enzyme,
                                                 annot_class='restriction_site', zorder=zorder,
                                                 cut_position=cut_position, strand='-'),
-                         FeatureRestrictionSiteLabel(start=cut_position[0], end=end,
+                         FeatureRestrictionSiteLabel(start=cut_position[0] + 1, end=end,
                                                      xmin=self.xmin, xmax=self.xmax, name=enzyme,
                                                      zorder=zorder, level=1)]
             else:
@@ -765,7 +770,7 @@ class TrackGroup():
                     if VERBOSE >= 2: print("adding restriction site feature", enzyme, start, end)
                     cut_shift_5p = restrict_dict['cut_position'][0]
                     cut_shift_3p = restrict_dict['cut_position'][1]
-                    cut_position = (start + cut_shift_5p, end + cut_shift_3p)
+                    cut_position = (start + cut_shift_5p - 1, end + cut_shift_3p)
                     feat = FeatureRestrictionSite(feature_bio=None, start=start, end=end,
                                                   xmin=self.xmin, xmax=self.xmax, name=enzyme,
                                                   annot_class='restriction_site',
@@ -776,7 +781,7 @@ class TrackGroup():
                                                   annot_class='restriction_site',
                                                   cut_position=cut_position, strand='-')
                     self.features_overlay.append(feat)
-                    feat = FeatureRestrictionSiteLabel(start=cut_position[0], end=end,
+                    feat = FeatureRestrictionSiteLabel(start=cut_position[0] + 1, end=end,
                                                        xmin=self.xmin, xmax=self.xmax, name=enzyme,
                                                        level=1)
                     self.features_fixed.append(feat)
@@ -1456,47 +1461,33 @@ class HTMLWriter():
         margin-right: -100%;
     }}\n""".format(0.6*self.css_base_fontsize*self.css_track_height, self.css_units)
             style += """
-    .SH_track0 > td.SH_restriction_site_strandp_left {{
-        border-top: 0;
-        border-bottom: 1px;
-        border-left: 1px;
+    .SH_track0 > td.SH_restriction_site {{
         border-right: 0;
-        border-style: solid;
+        border-left: 0;
+        border-top: 0;
+        border-bottom: 0;
+        border-right-style: solid;
+        border-left-style: solid;
+        border-top-style: solid;
+        border-bottom-style: solid;
+    }}
+    .SH_track0 > td.SH_restriction_site_strandp_left {{
+        border-right: 1px;
+        border-right-style: solid;
     }}
     .SH_track0 > td.SH_restriction_site_strandp_middle {{
-        border-top: 0;
         border-bottom: 1px;
-        border-left: 0;
-        border-right: 0;
-        border-style: solid;
+        border-bottom-style: solid;
     }}
     .SH_track0 > td.SH_restriction_site_strandp_right {{
-        border-top: 0;
-        border-bottom: 0;
-        border-left: 0;
-        border-right: 0;
-        border-style: solid;
     }}
     .SH_track_minus_strand > td.SH_restriction_site_strandp_left {{
-        border-top: 0;
-        border-bottom: 0;
-        border-left: 0;
-        border-right: 0;
-        border-style: solid;
     }}
     .SH_track_minus_strand > td.SH_restriction_site_strandp_middle {{
-        border-top: 0;
-        border-bottom: 0;
-        border-left: 0;
-        border-right: 0;
-        border-style: solid;
     }}
     .SH_track_minus_strand > td.SH_restriction_site_strandp_right {{
-        border-top: 0;
-        border-bottom: 0;
         border-left: 1px;
-        border-right: 0;
-        border-style: solid;
+        border-left-style: solid;
     }}\n""".format()
 
 
