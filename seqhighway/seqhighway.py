@@ -659,6 +659,8 @@ class TrackGroup():
             start = int(feature_bio.location.start) + seqrecord_start
             end = int(feature_bio.location.end) + seqrecord_start
             strand = convert_strand_numeric_to_strand_string(feature_bio.location.strand)
+            if strand is None:
+                strand = '+'
             feats = []
             name = extract_feature_name(feature_bio)
             zorder = 0
