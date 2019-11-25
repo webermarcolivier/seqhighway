@@ -754,13 +754,14 @@ class TrackGroup():
         if VERBOSE >= 1: print("TrackGroup:organize_tracks")
 
         # Create the fixed sequence label track and add all sequence label features
-        # (if not already done)
-        exists_sequence_label_track = (len([track for track in self.tracks.values()
-                                            if track.track_class == 'sequence_label']) > 0)
+        for i in list(self.tracks.keys()):
+            if self.tracks[i].track_class == 'sequence_label':
+                self.tracks.pop(i)
+                if VERBOSE >= 2: print("organize_tracks: removing track", i)
         # For some reason self.has_sequence_label_feat here is set back to FALSE while it was True just before
         self.has_sequence_label_feat = any([issubclass(type(feat), FeatureSequenceLabel) for feat
                                             in self.features_fixed])
-        if self.has_sequence_label_feat and not exists_sequence_label_track:
+        if self.has_sequence_label_feat:
             if VERBOSE >= 2: print("adding sequence label track")
             self.add_sequence_label_track()
             for feat in self.features_fixed:
@@ -771,11 +772,10 @@ class TrackGroup():
 
         # Remove all floating tracks
         for i in list(self.tracks.keys()):
-            print("organize_tracks: self.tracks[i].fixed", i, self.tracks[i].fixed)
+            if VERBOSE >= 2: print("organize_tracks: self.tracks[i].fixed", i, self.tracks[i].fixed)
             if not self.tracks[i].fixed:
                 self.tracks.pop(i)
-                print("organize_tracks: removing track", i)
-        print("organize_tracks:self.tracks.keys()", self.tracks.keys())
+                if VERBOSE >= 2: print("organize_tracks: removing track", i)
 
         if len(self.features_floating) > 0:
             feat_len_list = [feat.length for feat in self.features_floating]
