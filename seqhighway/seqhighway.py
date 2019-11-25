@@ -864,7 +864,7 @@ class TrackGroup():
             if feat.track is not None:
                 feat.track.features.remove(feat)
                 if VERBOSE >= 2: print("organize_tracks: removing overlay feature", feat,
-                                       "from track #", feat.track.level)
+                                       "from track #", feat.track)
 
         # Add overlay features to the main sequence track
         if len(self.features_overlay) > 0:
@@ -887,11 +887,11 @@ class TrackGroup():
                 self.tracks[0].features.append(feat)
                 feat.track = self.tracks[0]
         for feat in self.features_overlay:
-            print("features_overlay", feat.track.level, feat)
+            print("features_overlay", feat.track, feat)
         for feat in self.features_floating:
-            print("features_floating", feat.track.level, feat)
+            print("features_floating", feat.track, feat)
         for feat in self.features_fixed:
-            print("features_fixed", feat.track.level, feat)
+            print("features_fixed", feat.track, feat)
                 
     def get_dimensions(self):
         height = max(self.tracks.keys()) - min(self.tracks.keys()) + 1
