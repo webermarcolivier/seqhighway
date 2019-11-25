@@ -2,12 +2,20 @@ import itertools
 import matplotlib.colors as mcolors
 import seaborn as sns
 from copy import copy
+import re
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from .config import config_default as CONFIG
 
 
 
 VERBOSE = 2
+
+restriction_dict = {
+    # Example:
+    # 5'---G     AATTC---3'
+    # 3'---CTTAA     G---5'
+    'EcoRI':{'motif':'GAATTC', 'cut_position':(+1, -1)}
+}
 
 def get_color_map(x="Blues"):
     color_list = None
@@ -125,7 +133,8 @@ class TrackFeature():
     
     newid = itertools.count()
     
-    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
+    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None,
+                 level=0, zorder=0, annot_class=None, track=None):
         self.start = start
         self.end = end
         self.start_uncropped = start
@@ -135,6 +144,7 @@ class TrackFeature():
         self.xmax = xmax
         self.feature_bio = feature_bio
         self.length = None
+        self.track = track
 
         self.visible = True
         self.cropped_left = False
@@ -239,9 +249,8 @@ class TrackFeature():
 
 class FeatureOverlay(TrackFeature):
     
-    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
-        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
-                         name=name, level=level, zorder=zorder, annot_class=annot_class)
+    def __init__(self, start, end, strand, xmin, xmax, **kwargs):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, **kwargs)
         self.modifies_text = False
             
     def get_text(self, text, j=None):
@@ -250,17 +259,22 @@ class FeatureOverlay(TrackFeature):
         
 class FeatureFloating(TrackFeature):
     
-    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
-        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
-                         name=name, level=level, zorder=zorder, annot_class=annot_class)
+    def __init__(self, start, end, strand, xmin, xmax, **kwargs):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, **kwargs)
         self.modifies_text = True
+
+
+class FeatureFixed(TrackFeature):
+    """The FeatureFixed is fixed on the track."""
+    
+    def __init__(self, start, end, strand, xmin, xmax, level, **kwargs):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, level=level, **kwargs)
 
 
 class FeatureArrow(FeatureFloating):
     
-    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None):
-        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
-                         name=name, level=level, zorder=zorder, annot_class=annot_class)
+    def __init__(self, start, end, strand, xmin, xmax, **kwargs):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, **kwargs)
         self.show_label = True
         self.label_rel_pos = 1    # position of the annotation label with respect to the strand-specific start
      
@@ -383,11 +397,9 @@ class FeatureArrow(FeatureFloating):
     
 class FeatureTranslation(FeatureFloating):
     
-    def __init__(self, start, end, strand, xmin, xmax, feature_bio=None, name=None, level=0, zorder=0, annot_class=None,
-                 seqrecord=None, codon_table=1, cds=True, to_stop=False):
-        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
-                         name=name, level=level, zorder=zorder, annot_class=annot_class)
-        self.show_label = True
+    def __init__(self, start, end, strand, xmin, xmax, feature_bio, seqrecord=None, codon_table=1,
+                 cds=True, to_stop=False, **kwargs):
+        super().__init__(start=start, end=end, strand=strand, xmin=xmin, xmax=xmax, feature_bio=feature_bio, **kwargs)
         self.seqrecord = seqrecord
         self.protein_seq = (self.feature_bio.extract(self.seqrecord).seq
                             .translate(table=codon_table, cds=cds, to_stop=to_stop))
@@ -395,6 +407,7 @@ class FeatureTranslation(FeatureFloating):
         if cds:
             # add the stop codon
             self.protein_seq = self.protein_seq + '*'
+        self.show_label = True
 
     def get_text(self, text, j):
         j1 = j + self.xmin
@@ -416,12 +429,10 @@ class FeatureTranslation(FeatureFloating):
 
 
 class FeatureRestrictionSite(FeatureOverlay):
-    def __init__(self, start, end, xmin=None, xmax=None, feature_bio=None, name=None, level=0, zorder=0,
-                 annot_class=None, cut_position=None):
-        super().__init__(start=start, end=end, strand=None, xmin=xmin, xmax=xmax, feature_bio=feature_bio,
-                         name=name, level=level, zorder=zorder, annot_class=annot_class)
-        self.show_label = True
+    def __init__(self, start, end, cut_position=None, **kwargs):
         self.cut_position = cut_position
+        super().__init__(start=start, end=end, strand=None, **kwargs)
+        self.show_label = True
 
 
     def get_css(self, track_height, css_units, colwidth, base_fontsize):
@@ -458,13 +469,11 @@ class FeatureRestrictionSite(FeatureOverlay):
         return tag_open, tag_close, class_list, self.id_
 
 
-
-
-class FeatureTick(FeatureFloating):
+class FeatureTick(TrackFeature):
     
-    def __init__(self, position, xmin=None, xmax=None, name=None, level=0, zorder=0):
-        super().__init__(start=position, end=position + 1, strand='+', xmin=xmin, xmax=xmax, feature_bio=None,
-                         name='tick', level=level, zorder=zorder, annot_class='coordinates')
+    def __init__(self, position, **kwargs):
+        super().__init__(start=position, end=position + 1, strand='+', name='tick', annot_class='coordinates', **kwargs)
+        self.modifies_text = True
         self.show_label = True
 
     def get_text(self, text='', j=None):
@@ -491,8 +500,8 @@ class FeatureTick(FeatureFloating):
 
 class FeatureTickLine(FeatureTick):
     
-    def __init__(self, position, xmin=None, xmax=None, name=None, level=0, zorder=0):
-        super().__init__(position=position, xmin=xmin, xmax=xmax, name=name, level=level, zorder=zorder)
+    def __init__(self, position, **kwargs):
+        super().__init__(position=position, **kwargs)
         
     def get_text(self, text='', j=None):
         new_text = text
@@ -501,20 +510,19 @@ class FeatureTickLine(FeatureTick):
         return new_text
 
 
-class FeatureSequenceLabel(FeatureFloating):
+class FeatureSequenceLabel(FeatureFixed):
     
-    def __init__(self, start, end, xmin=None, xmax=None, name=None):
-        super().__init__(start=start, end=end, strand='+', xmin=xmin, xmax=xmax, feature_bio=None,
-                         name=name, level=1, zorder=0, annot_class='sequence_label')
+    def __init__(self, start, end, level, **kwargs):
+        super().__init__(start=start, end=end, strand='+', level=level, annot_class='sequence_label', **kwargs)
         self.show_label = True
 
     def get_text(self, text, j):
         if self.strand == '+':
             # write the label at the start position
-            if j == 0:
-                return text
+            if j == self.jstart:
+                return self.name
             else:
-                return ''
+                return text
             
     def get_css(self, track_height, css_units, colwidth, base_fontsize):
         css_class = ''
@@ -531,13 +539,40 @@ class FeatureSequenceLabel(FeatureFloating):
         return tag_open, tag_close, ['SH_sequence_label'], self.id_
 
 
+class FeatureRestrictionSiteLabel(FeatureSequenceLabel):
+
+    def __init__(self, start, end, level, **kwargs):
+        super().__init__(start=start, end=end, level=level, **kwargs)
+        self.show_triangle = True
+
+    def get_css_tag(self, j):
+
+        class_list = []
+        tag_open = '<div id="featId{:d}" class="SH_sequence_label">'.format(self.id_)
+        tag_close = '</div>'
         
+        if ((self.strand == '+' and j == self.jstart) or (self.strand == '-' and j == self.jend - 1)):
+            if self.show_triangle:
+                content_triangle = ('<div id="featId{:d}" class="SH_restriction_triangle">'.format(self.id_) +
+                                    '<svg width="8" height="8"><polygon points="0 0, 8 0, 4 8"/></svg>' +
+                                    '</div>')
+                tag_open = tag_open + content_triangle
+
+            if self.show_label:
+                tag_open = tag_open + '<div id="featId{:d}" class="SH_restriction_label">'.format(self.id_)
+                tag_close = '</div>' + tag_close
+
+        return tag_open, tag_close, class_list, self.id_
+
+
+
 class Track():
-    def __init__(self, name=None, seq=None, track_class='default'):
+    def __init__(self, name=None, seq=None, track_class='default', fixed=True):
         self.seq = seq
         self.name = name
         self.features = []
         self.track_class = track_class
+        self.fixed = fixed
 
 
 class TrackGroup():
@@ -546,7 +581,8 @@ class TrackGroup():
     
     newid = itertools.count()
     
-    def __init__(self, xmin, xmax, seqrecord=None, seqrecord_start=None, name=None, show_translation=False, codon_table=1):
+    def __init__(self, xmin, xmax, seqrecord=None, seqrecord_start=None, name=None, show_translation=False,
+                 codon_table=1):
         if name is None:
             self.name = '{:d}'.format(next(self.newid))
         else:
@@ -559,20 +595,16 @@ class TrackGroup():
         self.xmax = xmax
         self.features_overlay = []
         self.features_floating = []
+        self.features_fixed = []
         self.codon_table = codon_table
         if seqrecord is not None:
             self.read_seqrecord(seqrecord, seqrecord_start)
         self.show_translation = show_translation
+        self.has_sequence_label_feat = False
         
     def get_main_track(self):
         return self.tracks[0]
     
-#     def update_xmin_xmax(self, xmin, xmax):
-#         self.xmin = xmin
-#         self.xmax = xmax
-#         # update tracks, update all features, etc etc
-#         # to cumbersome
-
     def read_seqrecord(self, seqrecord, seqrecord_start):
         # We read the seqrecord and build a list of tracks, with main track being the sequence
         # and with additional tracks for floating annotations
@@ -591,7 +623,7 @@ class TrackGroup():
         seq = str(self.seqrecord_cropped.seq)
         
         # Create main track
-        self.tracks = {0:Track(name=self.seqrecord.id, seq=seq)}
+        self.tracks = {0:Track(name=self.seqrecord.id, seq=seq, fixed=True)}
         
         # We iterate over *all* the features of the SeqRecord object. Note that we do not slice the SeqRecord object,
         # because the BioPython slice will drop all the features that are not fully contained in the slice. We want to
@@ -605,7 +637,7 @@ class TrackGroup():
             start = int(feature_bio.location.start) + seqrecord_start
             end = int(feature_bio.location.end) + seqrecord_start
             strand = convert_strand_numeric_to_strand_string(feature_bio.location.strand)
-            feat = None
+            feats = []
             name = extract_feature_name(feature_bio)
             zorder = 0
             if 'z_order' in feature_bio.qualifiers:
@@ -613,30 +645,31 @@ class TrackGroup():
             if 'zorder' in feature_bio.qualifiers:
                 zorder = feature_bio.qualifiers['zorder']
             if feature_bio.type in ['CDS']:
-                feat = FeatureArrow(feature_bio=feature_bio, start=start, end=end, strand=strand,
-                                    xmin=self.xmin, xmax=self.xmax, name=name,
-                                    annot_class='CDS', zorder=zorder)
+                feats = [FeatureArrow(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                      xmin=self.xmin, xmax=self.xmax, name=name,
+                                      annot_class='CDS', zorder=zorder)]
             elif feature_bio.type in ['ncRNA', 'sRNA', 'tRNA', 'siRNA']:
-                feat = FeatureArrow(feature_bio=feature_bio, start=start, end=end, strand=strand,
-                                    xmin=self.xmin, xmax=self.xmax, name=name,
-                                    annot_class='RNA', zorder=zorder)
+                feats = [FeatureArrow(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                      xmin=self.xmin, xmax=self.xmax, name=name,
+                                      annot_class='RNA', zorder=zorder)]
             elif feature_bio.type in ['start_codon']:
-                feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
-                                      xmin=self.xmin, xmax=self.xmax, name=name,
-                                      annot_class='start_codon', zorder=zorder)
+                feats = [FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                        xmin=self.xmin, xmax=self.xmax, name=name,
+                                        annot_class='start_codon', zorder=zorder)]
             elif feature_bio.type in ['region']:
-                feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
-                                      xmin=self.xmin, xmax=self.xmax, name=name,
-                                      annot_class='region', zorder=zorder)
+                feats = [FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                        xmin=self.xmin, xmax=self.xmax, name=name,
+                                        annot_class='region', zorder=zorder)]
             elif feature_bio.type in ['restriction_site']:
                 cut_position = None
                 if 'enzyme' in feature_bio.qualifiers.keys():
                     enzyme = feature_bio.qualifiers['enzyme'][0]
-                    if enzyme == 'EcoRI':
-                        # Example:
-                        # 5'---G     AATTC---3'
-                        # 3'---CTTAA     G---5'
-                        cut_position = (start + 1, end - 1)
+                    if enzyme not in restriction_dict.keys():
+                        raise ValueError("Enzyme name", enzyme, "is not in the restriction enzyme dictionary.")
+                    else:
+                        cut_shift_5p = restriction_dict[enzyme]['cut_position'][0]
+                        cut_shift_3p = restriction_dict[enzyme]['cut_position'][1]
+                        cut_position = (start + cut_shift_5p, end + cut_shift_3p)
                 else:
                     enzyme = None
                     # Enzyme name can be omitted if the exact cleavage site is known
@@ -644,27 +677,35 @@ class TrackGroup():
                         cut_position = feature_bio.qualifiers['cut_position']
                     else:
                         raise ValueError("Either the enzyme name or the exact cut_position has to be given.")
-                feat = FeatureRestrictionSite(feature_bio=feature_bio, start=start, end=end,
-                                              xmin=self.xmin, xmax=self.xmax, name=enzyme,
-                                              annot_class='restriction_site', zorder=zorder,
-                                              cut_position=cut_position)
+                feats = [FeatureRestrictionSite(feature_bio=feature_bio, start=start, end=end,
+                                                xmin=self.xmin, xmax=self.xmax, name=enzyme,
+                                                annot_class='restriction_site', zorder=zorder,
+                                                cut_position=cut_position),
+                         FeatureRestrictionSiteLabel(start=cut_position[0], end=end,
+                                                     xmin=self.xmin, xmax=self.xmax, name=enzyme,
+                                                     zorder=zorder, level=1)]
             else:
-                feat = FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
-                                      xmin=self.xmin, xmax=self.xmax, name=name,
-                                      annot_class=feature_bio.type, zorder=zorder)
-                pass
-            if feat is not None and feat.visible:
-                if issubclass(type(feat), FeatureFloating):
-                    self.features_floating.append(feat)
-                elif issubclass(type(feat), FeatureOverlay):
-                    self.features_overlay.append(feat)
-    
+                feats = [FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                        xmin=self.xmin, xmax=self.xmax, name=name,
+                                        annot_class=feature_bio.type, zorder=zorder)]
+
+            if feats is not []:
+                for feat in feats:
+                    if feat.visible:
+                        if issubclass(type(feat), FeatureFloating):
+                            self.features_floating.append(feat)
+                        elif issubclass(type(feat), FeatureOverlay):
+                            self.features_overlay.append(feat)
+                        elif issubclass(type(feat), FeatureSequenceLabel):
+                            self.features_fixed.append(feat)
+                            self.has_sequence_label_feat = True
+
     def add_minus_strand(self):
         negative_track_keys = [k for k in self.tracks.keys() if k < 0]
         if len(negative_track_keys) > 0:
             for k in negative_track_keys:
                 self.tracks[k - 1] = self.tracks.pop(k)
-        self.tracks[-1] = Track(name='', track_class='minus_strand',
+        self.tracks[-1] = Track(name='', track_class='minus_strand', fixed=True,
                                 seq=str(self.seqrecord_cropped.reverse_complement().seq)[::-1])
 
     def add_sequence_label_track(self):
@@ -673,14 +714,69 @@ class TrackGroup():
             # Shift all upper tracks one unit up
             for k in sorted(positive_track_keys, reverse=True):
                 self.tracks[k + 1] = self.tracks.pop(k)
-        self.tracks[1] = Track(name='', track_class='sequence_label')
+        self.tracks[1] = Track(name='', track_class='sequence_label', fixed=True)
 
-        feat = FeatureTickLine(position=x, xmin=self.xmin, xmax=self.xmax)
-        trackgroup.features_floating.append(feat)
-        trackgroup.tracks[1].features.append(feat)
-    
+    def add_restriction_sites(self):
+        if self.tracks[1].track_class != 'sequence_label':
+            self.add_sequence_label_track()
+
+        # Search for restriction sites
+        seq = self.get_main_track().seq
+
+        for enzyme, restrict_dict in restriction_dict.items():
+            re_motif = re.compile(restrict_dict['motif'])
+            for m in re_motif.finditer(seq):
+                if VERBOSE >= 2: print(enzyme, re_motif, m.start(), m.end(), m.group())
+                start = m.start()
+                end = m.end()
+                # Test if the feature has already been added
+                exists = any([feat.start == start and issubclass(type(feat), FeatureRestrictionSite)
+                              for feat in self.features_overlay])
+                if not exists:
+                    print("adding restriction site feature", enzyme, start, end)
+                    cut_shift_5p = restrict_dict['cut_position'][0]
+                    cut_shift_3p = restrict_dict['cut_position'][1]
+                    cut_position = (start + cut_shift_5p, end + cut_shift_3p)
+                    feat = FeatureRestrictionSite(feature_bio=None, start=start, end=end,
+                                                  xmin=self.xmin, xmax=self.xmax, name=enzyme,
+                                                  annot_class='restriction_site',
+                                                  cut_position=cut_position)
+                    self.features_overlay.append(feat)
+                    feat = FeatureRestrictionSiteLabel(start=cut_position[0], end=end,
+                                                       xmin=self.xmin, xmax=self.xmax, name=enzyme,
+                                                       level=1)
+                    self.features_fixed.append(feat)
+                    self.has_sequence_label_feat = True
+        self.organize_tracks()
+
+
     def organize_tracks(self):
         if VERBOSE >= 1: print("TrackGroup:organize_tracks")
+
+        # Create the fixed sequence label track and add all sequence label features
+        # (if not already done)
+        exists_sequence_label_track = (len([track for track in self.tracks.values()
+                                            if track.track_class == 'sequence_label']) > 0)
+        # For some reason self.has_sequence_label_feat here is set back to FALSE while it was True just before
+        self.has_sequence_label_feat = any([issubclass(type(feat), FeatureSequenceLabel) for feat
+                                            in self.features_fixed])
+        if self.has_sequence_label_feat and not exists_sequence_label_track:
+            if VERBOSE >= 2: print("adding sequence label track")
+            self.add_sequence_label_track()
+            for feat in self.features_fixed:
+                if issubclass(type(feat), FeatureSequenceLabel):
+                    self.tracks[1].features.append(feat)
+
+        # Organize floating features into multiple tracks, computing smart layout
+
+        # Remove all floating tracks
+        for i in list(self.tracks.keys()):
+            print("organize_tracks: self.tracks[i].fixed", i, self.tracks[i].fixed)
+            if not self.tracks[i].fixed:
+                self.tracks.pop(i)
+                print("organize_tracks: removing track", i)
+        print("organize_tracks:self.tracks.keys()", self.tracks.keys())
+
         if len(self.features_floating) > 0:
             feat_len_list = [feat.length for feat in self.features_floating]
             # Sort features with longer one first
@@ -693,7 +789,7 @@ class TrackGroup():
             for feat in self.features_floating:
                 level = feat.level
                 if level not in self.tracks.keys():
-                    self.tracks[level] = Track()
+                    self.tracks[level] = Track(fixed=False)
                 # Add feature to track
                 self.tracks[level].features.append(feat)
 
@@ -701,13 +797,13 @@ class TrackGroup():
                 # Add additional tracks for features that need several tracks together,
                 # for example, translation sequence below the arrow for CDS.
                 levels = set([feat.level for feat in self.features_floating if feat.annot_class == 'CDS'])
-                tracks_copy = self.tracks
+                tracks_copy = copy(self.tracks)
                 self.tracks = dict()
                 new_level = min(tracks_copy.keys())
                 for old_level in sorted(tracks_copy.keys()):
                     if old_level in levels:
                         # add new empty track below
-                        self.tracks[new_level] = Track()
+                        self.tracks[new_level] = Track(fixed=False)
                         self.tracks[new_level + 1] = tracks_copy[old_level]
                         for feat in self.tracks[new_level + 1].features:
                             feat.level = new_level + 1
@@ -731,7 +827,7 @@ class TrackGroup():
                             feat.level = new_level
                         new_level += 1
                 
-                
+        # Add overlay features to the main sequence track
         if len(self.features_overlay) > 0:
             feat_len_list = [feat.length for feat in self.features_overlay]
             # Sort features with longest one first, which will have the lowest zorder
@@ -844,6 +940,9 @@ class TrackHighway():
         else:
             trackgroup = self.trackgroup_list[0]
         trackgroup.add_minus_strand()
+
+    def add_restriction_sites(self):
+        self.trackgroup_list[0].add_restriction_sites()
         
     def update_array(self):
         # generate an array representation of the tracks and annotations
@@ -947,6 +1046,7 @@ class HTMLWriter():
         indent = '    '
 
 
+        ### FIXED TABLE MODE
         if self.mode == 'fixed_table':
             s = ''
             indent_container = ''
@@ -1030,6 +1130,7 @@ class HTMLWriter():
             s += indent_container + '</div>\n'
 
 
+        ### INLINE-BLOCK MODE
         elif self.mode == 'inline-block':
             s = ''
             s += '<span class="SH_highway">\n'
@@ -1204,6 +1305,24 @@ class HTMLWriter():
         height: {}{};
         padding-bottom: 0;
     }}""".format(1*self.css_base_fontsize*self.css_track_height, self.css_units,)
+            style += """
+    div.SH_sequence_label {{
+        position: relative;
+        overflow-x: visible;
+        float: left;
+    }}""".format()
+            style += """
+    .SH_restriction_triangle {{
+        display: inline-block;
+        position: absolute;
+        bottom: 0;
+        left: -4;
+    }}
+    .SH_restriction_label {{
+        display: inline-block;
+        position: relative;
+        left: 5;
+    }}""".format()
             style += """
     td.SH_td.SH_CDS {{
     }}""".format()
@@ -1389,6 +1508,13 @@ class HTMLWriter():
     .SH_track_sequence_label {{
         margin-top: {}{};
         margin-bottom: {}{};
+    }}
+    .SH_restriction_triangle {{
+        display: inline-block;
+        position: absolute;
+        bottom: 0;
+        left: -4 px;
+        margin-right: 6 px;
     }}
     .SH_track_coordinates {{
         height: {}{};
