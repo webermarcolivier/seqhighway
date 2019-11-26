@@ -10,11 +10,11 @@ Given a Biopython SeqRecord as input (for example parsed from a genbank file), S
 
 - CDS, genes (floating arrows)
 - translated protein sequence
-- sequence motifs (sequence overlay)
+- sequence motifs (sequence overlay), with specific z order
 - restriction sites
 - cropping of the sequence and features
-- coordinate system
 - minus strand
+- coordinate system
 
 ## Examples of use
 
