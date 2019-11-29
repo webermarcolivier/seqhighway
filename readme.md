@@ -1,20 +1,22 @@
 # SeqHighway
 
-SeqHighway is a python library to visualize annotated biological sequences, e.g. from genbank files, in HTML / CSS.
+SeqHighway is a python library to visualize annotated biological sequences in HTML / CSS.
 
 ![](example/seqhighway.html.pdf.png)
 
-Given a Biopython SeqRecord as input (for example parsed from a genbank file), SeqHighway will generate an HTML representation by using pure HTML/CSS (with optionaly some svg graphics) of the sequence. Annotations such as genes and CDS are represented by colored arrows above the sequence, with a clear layout even when features are overlapping. Translated protein sequence can be optionaly shown below the arrow. Other annotations, such as start codon, motifs, etc, can be overlaid over the sequence by applying a background color or any change in font properties. Restriction sites are shown by drawing a simple line.
+See [HTML preview](https://htmlpreview.github.io/?https://github.com/webermarcolivier/seqhighway/blob/master/example/seqhighway.html).
+
+Given a Biopython SeqRecord as input (for example parsed from a genbank file), SeqHighway will generate an HTML representation by using pure HTML/CSS (with optionaly some svg graphics) of the sequence. Annotations such as genes and CDS are represented by colored arrows above the sequence, with a clear layout even when features are overlapping. Translated protein sequence can be optionaly shown below the arrow. Other annotations, such as start codon, motifs, etc, can be overlaid over the sequence by applying a background color or any change in font properties. The priorities of overlapping overlay annotations is resolved by comparing zorder attribute and annotation lengths. Restriction sites are shown by drawing a simple line.
 
 ## Currently implemented features
 
 - CDS, genes (floating arrows)
 - translated protein sequence
-- sequence motifs (sequence overlay), with specific z order
+- sequence motifs/regions (sequence overlay), with specific z order
 - restriction sites
-- cropping of the sequence and features
 - minus strand
 - coordinate system
+- cropping of the sequence and features
 
 ## Examples of use
 
