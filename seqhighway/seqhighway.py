@@ -701,6 +701,10 @@ class TrackGroup():
                 feats = [FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
                                         xmin=self.xmin, xmax=self.xmax, name=name,
                                         annot_class='start_codon', zorder=zorder)]
+            elif feature_bio.type in ['RBS']:
+                feats = [FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
+                                        xmin=self.xmin, xmax=self.xmax, name=name,
+                                        annot_class='RBS', zorder=zorder)]
             elif feature_bio.type in ['region']:
                 feats = [FeatureOverlay(feature_bio=feature_bio, start=start, end=end, strand=strand,
                                         xmin=self.xmin, xmax=self.xmax, name=name,
@@ -1638,9 +1642,8 @@ class HTMLWriter():
     .SH_restriction_triangle {{
         display: inline-block;
         position: absolute;
-        bottom: 0;
-        left: -4 px;
-        margin-right: 6 px;
+        bottom: 100%;
+        left: -3px;
     }}
     .SH_track_coordinates {{
         height: {}{};
@@ -1669,6 +1672,34 @@ class HTMLWriter():
         margin-left: -100%;
         margin-right: -100%;
         text-align: center;
+    }}
+    .SH_restriction_site {{
+        border-right: 0;
+        border-left: 0;
+        border-top: 0;
+        border-bottom: 0;
+        border-right-style: solid;
+        border-left-style: solid;
+        border-top-style: solid;
+        border-bottom-style: solid;
+    }}
+    .SH_track0 .SH_restriction_site_strandp_left {{
+        border-right: 1px;
+        border-right-style: solid;
+    }}
+    .SH_track0 .SH_restriction_site_strandp_middle {{
+        border-bottom: 1px;
+        border-bottom-style: solid;
+    }}
+    .SH_track0 .SH_restriction_site_strandp_right {{
+    }}
+    .SH_track_minus_strand .SH_restriction_site_strandp_left {{
+    }}
+    .SH_track_minus_strand .SH_restriction_site_strandp_middle {{
+    }}
+    .SH_track_minus_strand .SH_restriction_site_strandp_right {{
+        border-left: 1px;
+        border-left-style: solid;
     }}
 """
                 .format(#SH_col

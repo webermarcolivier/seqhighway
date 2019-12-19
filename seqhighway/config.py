@@ -30,6 +30,9 @@ config_default = {
         'fontcolor':'red',
         'css_attributes':{'font-weight':'bold'}
     },
+    'RBS':{
+        'css_attributes':{'text-decoration':'underline'}
+    },
     'region':{
         'fontcolor':palette[2],
         'css_attributes':{'text-decoration':'underline'}
