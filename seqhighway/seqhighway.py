@@ -5,10 +5,8 @@ from copy import copy
 import re
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from .config import config_default as CONFIG
+from .config import VERBOSE
 
-
-
-VERBOSE = 2
 
 restriction_dict = {
     # EcoRI
@@ -474,7 +472,7 @@ class FeatureRestrictionSite(FeatureOverlay):
         style = 'normal'
         cut_left = self.cut_position[0]
         cut_right = self.cut_position[1]
-        print("FeatureRestrictionSite", self.cut_position, cut_left, cut_right, j1)
+        if VERBOSE >= 2: print("FeatureRestrictionSite", self.cut_position, cut_left, cut_right, j1)
         class_list = ['SH_restriction_site']
         if style == 'normal':
             if j1 == cut_left:
@@ -963,12 +961,13 @@ class TrackGroup():
                     self.get_minus_strand_track().features.append(feat)
                     feat.track = self.get_minus_strand_track()
 
-        for feat in self.features_overlay:
-            print("features_overlay", feat.track, feat)
-        for feat in self.features_floating:
-            print("features_floating", feat.track, feat)
-        for feat in self.features_fixed:
-            print("features_fixed", feat.track, feat)
+        if VERBOSE >= 2:
+            for feat in self.features_overlay:
+                print("features_overlay", feat.track, feat)
+            for feat in self.features_floating:
+                print("features_floating", feat.track, feat)
+            for feat in self.features_fixed:
+                print("features_fixed", feat.track, feat)
                 
     def get_dimensions(self):
         height = max(self.tracks.keys()) - min(self.tracks.keys()) + 1

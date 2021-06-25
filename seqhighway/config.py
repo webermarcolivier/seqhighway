@@ -1,5 +1,6 @@
 import seaborn as sns
 
+VERBOSE = 0
 palette = sns.color_palette('deep')
 alpha = 0.8
 
@@ -33,6 +34,9 @@ config_default = {
     'RBS':{
         'css_attributes':{'text-decoration':'underline'}
     },
+    'peptide_found':{
+        'css_attributes':{'font-weight':'bold'}
+    },
     'region':{
         'fontcolor':palette[2],
         'css_attributes':{'text-decoration':'underline'}
@@ -43,7 +47,7 @@ config_default = {
     'region_score':{
         'background_score_name':'score',
         'background_score_cmap':'Blues',
-        'background_score_vmin':-2,
-        'background_score_vmax':2
+        'background_score_vmin':0,
+        'background_score_vmax':1
     }
 }
