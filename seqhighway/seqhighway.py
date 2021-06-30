@@ -1,5 +1,6 @@
 import itertools
 import matplotlib.colors as mcolors
+from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 from copy import copy
 import re
@@ -43,10 +44,14 @@ restriction_dict = {
     'SalI':{'motif':'GTCGAC', 'cut_position':(+1, -1)},
 }
 
+
 def get_color_map(x="Blues"):
     color_list = None
     if x is None:
         return None
+    elif type(x) is LinearSegmentedColormap:
+        colormap = x
+        return colormap
     elif type(x) is str:
         name = x
         color_list = sns.color_palette(name, 61)

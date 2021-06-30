@@ -46,7 +46,8 @@ config_default = {
     },
     'region_score':{
         'background_score_name':'score',
-        'background_score_cmap':'Blues',
+        # 'background_score_cmap':'Blues',
+        'background_score_cmap':sns.light_palette((259,80,60), as_cmap=True, input='husl'),
         'background_score_vmin':0,
         'background_score_vmax':1
     }
